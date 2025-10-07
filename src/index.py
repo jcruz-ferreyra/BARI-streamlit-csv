@@ -1,5 +1,7 @@
 import json
+import os
 from datetime import datetime, time
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -10,14 +12,16 @@ import streamlit as st
 
 @st.cache_data(ttl=3600)
 def get_sensor_readings():
-    csv_file = "./data.csv"
-    return pd.read_csv(csv_file, dtype={'sensor_id': str}, parse_dates=['timestamp'])
+    script_dir = Path(__file__).parent
+    csv_file = script_dir / "data.csv"
+    return pd.read_csv(csv_file, dtype={"sensor_id": str}, parse_dates=["timestamp"])
 
 
 @st.cache_data
 def get_sensor_metadata():
-    csv_file = "./metadata.csv"
-    return pd.read_csv(csv_file, dtype={'sensor_id': str})
+    script_dir = Path(__file__).parent
+    csv_file = script_dir / "metadata.csv"
+    return pd.read_csv(csv_file, dtype={"sensor_id": str})
 
 
 def get_sensor_address_from_id(metadata_df, sensor_id):
@@ -31,8 +35,12 @@ sensor_metadata = get_sensor_metadata()
 # Check for sensor filtering parameter in the URL
 sensor_to_display = st.query_params.get("sensor", None)
 if sensor_to_display:
-    filtered = sensor_metadata[sensor_metadata["sensor_id"] == sensor_to_display]["address"].values
-    sensor_to_display_address = filtered[0] if len(filtered) > 0 else f"Sensor {sensor_to_display}"
+    filtered = sensor_metadata[sensor_metadata["sensor_id"] == sensor_to_display][
+        "address"
+    ].values
+    sensor_to_display_address = (
+        filtered[0] if len(filtered) > 0 else f"Sensor {sensor_to_display}"
+    )
 else:
     sensor_to_display_address = None
 
