@@ -34,6 +34,7 @@ sensor_metadata = get_sensor_metadata()
 
 # Check for sensor filtering parameter in the URL
 sensor_to_display = st.query_params.get("sensor", None)
+sensor_to_display = str(int(sensor_to_display)).zfill(2) if sensor_to_display else None
 if sensor_to_display:
     filtered = sensor_metadata[sensor_metadata["sensor_id"] == sensor_to_display][
         "address"
