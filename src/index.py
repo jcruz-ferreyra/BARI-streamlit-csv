@@ -34,7 +34,6 @@ sensor_metadata = get_sensor_metadata()
 
 # Check for sensor filtering parameter in the URL
 sensor_to_display = st.query_params.get("sensor", None)
-sensor_to_display = str(int(sensor_to_display)).zfill(2) if sensor_to_display else None
 if sensor_to_display:
     filtered = sensor_metadata[sensor_metadata["sensor_id"] == sensor_to_display][
         "address"
@@ -180,7 +179,7 @@ with temp_chart_placeholder:
         x="timestamp",
         y="Heat",
         color="SensorLocation",
-        title=f"Temperature readings every {aggregation_options[aggregation_freq]} ({aggregation_func})",
+        title=f"Temperature readings (°F) every {aggregation_options[aggregation_freq]} ({aggregation_func})",
         hover_data=[
             "SensorLocation",
             "timestamp",
@@ -195,7 +194,7 @@ with noise_chart_placeholder:
         x="timestamp",
         y="Noise",
         color="SensorLocation",
-        title=f"Noise readings every {aggregation_options[aggregation_freq]} ({aggregation_func})",
+        title=f"Noise readings (db) every {aggregation_options[aggregation_freq]} ({aggregation_func})",
         hover_data=[
             "SensorLocation",
             "timestamp",
