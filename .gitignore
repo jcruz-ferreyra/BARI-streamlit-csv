@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+demoapp/**
+
+config.json
+simulate_data.ipynb
+
+data/
+
+.vscode
+
+Pipfile
+Pipfile.lock
