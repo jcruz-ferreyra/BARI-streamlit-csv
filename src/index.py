@@ -53,58 +53,35 @@ st.header(header_text)
 if sensor_to_display:
     sensor_readings = sensor_readings[sensor_readings["sensor_id"] == sensor_to_display]
 
-
-# <!-- Main Content - Tabs First -->
-
-# Define the tabs with their content
-tab1, tab2, tab3 = st.tabs(["Temperature", "Noise", "Raw Data"])
-
-# Placeholder values for initial render
-aggregation_freq = "15min"
-aggregation_func = "mean"
-
-with tab1:
-    temp_chart_placeholder = st.empty()
-
-with tab2:
-    noise_chart_placeholder = st.empty()
-
-with tab3:
-    raw_data_placeholder = st.empty()
-
-# <!-- Filter and Aggregation Options Below Charts -->
-
-st.divider()
+# <!-- Filtering Options -->
 
 # Inputs: Aggregation Options
-st.subheader("Aggregation Options")
-st.write("Select the temporal level and function to aggregate the data.")
+st.subheader("Aggregation")
+col_btn1, col_btn2, col_btn3 = st.columns(3)
 
-col_agg1, col_agg2 = st.columns(2)
+with col_btn1:
+    btn_1min = st.button("1 min avg", use_container_width=True)
+with col_btn2:
+    btn_1h = st.button("1 h avg", use_container_width=True)
+with col_btn3:
+    btn_1day = st.button("1 day avg", use_container_width=True)
 
-with col_agg1:
-    aggregation_options = {
-        "1min": "1 Minute",
-        "15min": "15 Minutes",
-        "30min": "30 Minutes",
-        "1h": "1 Hour",
-        "1D": "1 Day",
-    }
+# Set aggregation based on button clicks
+if btn_1min:
+    aggregation_freq = "1min"
+    aggregation_label = "1 Minute"
+elif btn_1h:
+    aggregation_freq = "1h"
+    aggregation_label = "1 Hour"
+elif btn_1day:
+    aggregation_freq = "1D"
+    aggregation_label = "1 Day"
+else:
+    # Default
+    aggregation_freq = "1h"
+    aggregation_label = "1 Hour"
 
-    aggregation_freq = st.selectbox(
-        "Temporal aggregation level:",
-        options=list(aggregation_options.keys()),
-        index=1,  # default to "15min"
-        format_func=lambda x: aggregation_options[x],  # show readable label
-    )
-
-with col_agg2:
-    aggregation_func = st.radio(
-        "Aggregation Function:",
-        options=["mean", "median", "min", "max"],
-        index=0,  # default to "mean"
-        horizontal=True,  # display as a row of buttons
-    )
+aggregation_func = "mean"  # Always use mean (avg)
 
 st.divider()
 
@@ -142,6 +119,28 @@ with col4:
 start_dt = datetime.combine(start_date, start_time)
 end_dt = datetime.combine(end_date, end_time)
 
+
+# <!-- Main Content - Tabs First -->
+
+# Define the tabs with their content
+tab1, tab2, tab3 = st.tabs(["Temperature", "Noise", "Raw Data"])
+
+# Placeholder values for initial render
+aggregation_freq = "15min"
+aggregation_func = "mean"
+
+with tab1:
+    temp_chart_placeholder = st.empty()
+
+with tab2:
+    noise_chart_placeholder = st.empty()
+
+with tab3:
+    raw_data_placeholder = st.empty()
+
+# <!-- Filter and Aggregation Options Below Charts -->
+
+st.divider()
 
 # Filter data
 if start_dt and end_dt and start_dt > end_dt:
